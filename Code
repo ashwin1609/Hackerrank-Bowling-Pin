@@ -1,0 +1,51 @@
+#!/bin/python3
+import os
+import sys
+# If there are n pins to knock down, the player can either knock down 1 or 2 pins
+# Grundy(0) = 0 since the first player has no pins to knock down
+# Grundy(1) = mex(0) = 1 since the first player can knock all the pins
+# Grundy(2) = mex(0,1) = 2
+# for n>2 Grundy(3)
+# Grundy numbers can be recursively defined as:
+# Grundy(n) = Mex[Grundy(n-1)+Grundy(n-2)]
+grundy = [0,1,2]
+for n in range(3,301):
+    mex_set = set() # define set
+    for i in range(n//2+1): 
+        mex_set.add(grundy[i]^grundy[n-1-i])
+        mex_set.add(grundy[i]^grundy[n-2-i]) 
+    mex = 0
+    #calculates the mex value in the set
+    while mex in mex_set: 
+        mex +=1
+    grundy.append(mex)
+
+# function which finds if the player WON or NOT
+# To find the xor_value it is initialized as zero and XOR with the length of the set,since XOR of any number with zero gives the number itself
+# if the xor_value is non-zero the player wins in any case
+# if the xor_value is zero the player loses in any case
+
+def Declaring_Winner(pin):
+    xor_value = 0
+    for mex_set in pin.split('X'):
+        xor_value^=grundy[len(mex_set)]
+    #return "WIN" if xor_value else "LOSE"
+    if xor_value == 0:
+        return("LOSE")
+    else:
+        return("WIN")
+        
+# t represents the number of test cases
+# n represents the number of pins
+# p represents the input which is a string of letters either I or X
+t = int(input())
+for x in range(t):
+    n = int(input())
+    pin = input()
+    print(Declaring_Winner(pin))
+        
+    
+
+        
+    
+        
